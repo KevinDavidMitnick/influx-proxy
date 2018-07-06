@@ -27,25 +27,14 @@ Requirements
 -----------
 
 * Golang >= 1.7
-* Redis-server
 * Python >= 2.7
 
 Usage
 ------------
 
 ```sh
-$ # install redis-server
-$ yum install redis
-$ # start redis-server on 6379 port
-$ redis-server --port 6379 &
-$ # Install influxdb-proxy to your $GOPATH/bin
-$ go get -u github.com/shell909090/influx-proxy/service
-$ go install github.com/shell909090/influx-proxy/service
-$ mv $GOPATH/bin/service $GOPATH/bin/influxdb-proxy
-$ # Edit config.py and execute it
-$ python config.py
-$ # Start influx-proxy!
-$ $GOPATH/bin/influxdb-proxy -redis localhost:6379
+1. compile it
+2. ./service to run
 ```
 
 Configuration
@@ -97,25 +86,11 @@ It will use the `cpu.load` corresponding backends.
 * Then Prefix match. For instance, we use `cpu.load` for measurement's name. The KEYMAPS  only has `cpu` key.
 It will use the `cpu` corresponding backends.
 
-Query Commands
+test  Commands
 --------
+influx_stress -config stress.toml -cpuprofile test.cpu
 
-#### Unsupported commands
 
-The following commands are forbid.
-
-* `DELETE` 
-* `DROP`  
-* `GRANT`
-* `REVOKE`
-
-#### Supported commands
-
-Only support match the following commands.
-
-* `.*where.*time`
-* `show.*from`
-* `show.*measurements`
 
 License
 -------

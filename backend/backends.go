@@ -31,6 +31,7 @@ type Backends struct {
 	write_counter    int32
 	rewriter_running bool
 	wg               sync.WaitGroup
+	lock             sync.RWMutex
 }
 
 // maybe ch_timer is not the best way.
@@ -101,6 +102,8 @@ func (bs *Backends) Close() (err error) {
 }
 
 func (bs *Backends) WriteBuffer(p []byte) {
+	bs.lock.Lock()
+	defer bs.lock.Unlock()
 	bs.write_counter++
 
 	if bs.buffer == nil {
@@ -138,6 +141,8 @@ func (bs *Backends) WriteBuffer(p []byte) {
 }
 
 func (bs *Backends) Flush() {
+	bs.lock.Lock()
+	defer bs.lock.Unlock()
 	if bs.buffer == nil {
 		return
 	}

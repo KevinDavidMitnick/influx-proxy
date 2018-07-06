@@ -18,7 +18,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/shell909090/influx-proxy/monitor"
+	"github.com/influx-proxy/monitor"
 )
 
 var (
@@ -69,7 +69,7 @@ type InfluxCluster struct {
 	query_executor Querier
 	ForbiddenQuery []*regexp.Regexp
 	ObligatedQuery []*regexp.Regexp
-	cfgsrc         *RedisConfigSource
+	cfgsrc         *ConfigSource
 	bas            []BackendAPI
 	backends       map[string]BackendAPI
 	m2bs           map[string][]BackendAPI // measurements to backends
@@ -94,7 +94,7 @@ type Statistics struct {
 	QueryRequestDuration int64
 }
 
-func NewInfluxCluster(cfgsrc *RedisConfigSource, nodecfg *NodeConfig) (ic *InfluxCluster) {
+func NewInfluxCluster(cfgsrc *ConfigSource, nodecfg *NodeConfig) (ic *InfluxCluster) {
 	ic = &InfluxCluster{
 		Zone:           nodecfg.Zone,
 		nexts:          nodecfg.Nexts,
@@ -129,7 +129,7 @@ func NewInfluxCluster(cfgsrc *RedisConfigSource, nodecfg *NodeConfig) (ic *Influ
 	}
 
 	// feature
-	go ic.statistics()
+	//go ic.statistics()
 	return
 }
 
@@ -219,10 +219,7 @@ func (ic *InfluxCluster) AddNext(ba BackendAPI) {
 func (ic *InfluxCluster) loadBackends() (backends map[string]BackendAPI, bas []BackendAPI, err error) {
 	backends = make(map[string]BackendAPI)
 
-	bkcfgs, err := ic.cfgsrc.LoadBackends()
-	if err != nil {
-		return
-	}
+	bkcfgs := ic.cfgsrc.Backends
 
 	for name, cfg := range bkcfgs {
 		backends[name], err = NewBackends(cfg, name)
@@ -250,11 +247,7 @@ func (ic *InfluxCluster) loadBackends() (backends map[string]BackendAPI, bas []B
 func (ic *InfluxCluster) loadMeasurements(backends map[string]BackendAPI) (m2bs map[string][]BackendAPI, err error) {
 	m2bs = make(map[string][]BackendAPI)
 
-	m_map, err := ic.cfgsrc.LoadMeasurements()
-	if err != nil {
-		return
-	}
-
+	m_map := ic.cfgsrc.Measurements
 	for name, bs_names := range m_map {
 		var bss []BackendAPI
 		for _, bs_name := range bs_names {
@@ -370,18 +363,18 @@ func (ic *InfluxCluster) Query(w http.ResponseWriter, req *http.Request) (err er
 		return
 	}
 
-	err = ic.query_executor.Query(w, req)
-	if err == nil {
-		return
-	}
+	// err = ic.query_executor.Query(w, req)
+	// if err == nil {
+	// 	return
+	// }
 
-	err = ic.CheckQuery(q)
-	if err != nil {
-		w.WriteHeader(400)
-		w.Write([]byte("query forbidden"))
-		atomic.AddInt64(&ic.stats.QueryRequestsFail, 1)
-		return
-	}
+	// err = ic.CheckQuery(q)
+	// if err != nil {
+	// 	w.WriteHeader(400)
+	// 	w.Write([]byte("query forbidden"))
+	// 	atomic.AddInt64(&ic.stats.QueryRequestsFail, 1)
+	// 	return
+	// }
 
 	key, err := GetMeasurementFromInfluxQL(q)
 	if err != nil {
@@ -481,38 +474,39 @@ func (ic *InfluxCluster) Write(p []byte) (err error) {
 		atomic.AddInt64(&ic.stats.WriteRequestDuration, time.Since(start).Nanoseconds())
 	}(time.Now())
 
-	buf := bytes.NewBuffer(p)
+	// buf := bytes.NewBuffer(p)
 
-	var line []byte
-	for {
-		line, err = buf.ReadBytes('\n')
-		switch err {
-		default:
-			log.Printf("error: %s\n", err)
-			atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-			return
-		case io.EOF, nil:
-			err = nil
-		}
+	// var line []byte
+	// for {
+	// 	line, err = buf.ReadBytes('\n')
+	// 	switch err {
+	// 	default:
+	// 		log.Printf("error: %s\n", err)
+	// 		atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
+	// 		return
+	// 	case io.EOF, nil:
+	// 		err = nil
+	// 	}
 
-		if len(line) == 0 {
-			break
-		}
+	// 	if len(line) == 0 {
+	// 		break
+	// 	}
 
-		ic.WriteRow(line)
-	}
+	// 	ic.WriteRow(line)
+	// }
+	ic.WriteRow(p)
 
-	ic.lock.RLock()
-	defer ic.lock.RUnlock()
-	if len(ic.bas) > 0 {
-		for _, n := range ic.bas {
-			err = n.Write(p)
-			if err != nil {
-				log.Printf("error: %s\n", err)
-				atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-			}
-		}
-	}
+	// ic.lock.RLock()
+	// defer ic.lock.RUnlock()
+	// if len(ic.bas) > 0 {
+	// 	for _, n := range ic.bas {
+	// 		err = n.Write(p)
+	// 		if err != nil {
+	// 			log.Printf("error: %s\n", err)
+	// 			atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
+	// 		}
+	// 	}
+	// }
 
 	return
 }

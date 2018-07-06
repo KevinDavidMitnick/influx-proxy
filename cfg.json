@@ -1,0 +1,52 @@
+{
+    "backends" :{
+        "test1":{
+            "zone":"default",
+            "url": "http://10.21.1.220:9086",
+            "db": "testDB",
+            "interval": 1000,
+            "timeout": 10000,
+            "timeoutquery":600000,
+            "maxrowlimit":10000,
+            "checkinterval":1000,
+            "rewriteinterval":10000
+        },
+        "test2" :{
+            "zone":"default",
+            "url": "http://10.21.1.221:9086",
+            "db": "testDB",
+            "interval": 1000,
+            "timeout": 10000,
+            "timeoutquery":600000,
+            "maxrowlimit":10000,
+            "checkinterval":1000,
+            "rewriteinterval":10000
+        },
+        "test3" :{
+            "zone":"default",
+            "url": "http://10.21.1.222:9086",
+            "db": "testDB",
+            "interval": 1000,
+            "timeout": 10000,
+            "timeoutquery":600000,
+            "maxrowlimit":10000,
+            "checkinterval":1000,
+            "rewriteinterval":10000
+        }
+    },
+    "node" : {
+        "listenaddr": ":6666",
+        "db": "testDB",
+        "zone": "default",
+        "interval":10,
+        "idletimeout":10,
+        "writetracing":0,
+        "querytracing":0
+    },
+    "measurements" : {
+        "cpu": ["test1","test2"],
+        "weather": ["test1","test2"]
+    }
+}
+
+
