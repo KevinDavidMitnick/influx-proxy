@@ -296,7 +296,7 @@ func (ic *InfluxCluster) UpdateConfig(measurement string) (err error) {
 	ic.lock.Lock()
 	defer ic.lock.Unlock()
 	ic.m2bs[measurement] = make([]BackendAPI, len(ic.bas))
-	for _, backend := range ic.bas {
+	for _, backend := range ic.backends {
 		ic.m2bs[measurement] = append(ic.m2bs[measurement], backend)
 	}
 	return nil
