@@ -291,6 +291,17 @@ func (ic *InfluxCluster) LoadConfig() (err error) {
 	return
 }
 
+// add new measurement.
+func (ic *InfluxCluster) UpdateConfig(measurement string) (err error) {
+	ic.lock.Lock()
+	defer ic.lock.Unlock()
+	ic.m2bs[measurement] = make([]BackendAPI, len(ic.bas))
+	for _, backend := range ic.bas {
+		ic.m2bs[measurement] = append(ic.m2bs[measurement], backend)
+	}
+	return nil
+}
+
 func (ic *InfluxCluster) Ping() (version string, err error) {
 	atomic.AddInt64(&ic.stats.PingRequests, 1)
 	version = VERSION
@@ -453,7 +464,8 @@ func (ic *InfluxCluster) WriteRow(line []byte) {
 		log.Printf("new measurement: %s\n", key)
 		atomic.AddInt64(&ic.stats.PointsWrittenFail, 1)
 		// TODO: new measurement?
-		return
+		ic.UpdateConfig(key)
+		bs, ok = ic.GetBackends(key)
 	}
 
 	// don't block here for a lont time, we just have one worker.
