@@ -65,7 +65,6 @@ func TrimRight(p []byte, s []byte) (r []byte) {
 type InfluxCluster struct {
 	lock           sync.RWMutex
 	Zone           string
-	nexts          string
 	query_executor Querier
 	ForbiddenQuery []*regexp.Regexp
 	ObligatedQuery []*regexp.Regexp
@@ -95,8 +94,6 @@ type Statistics struct {
 
 func NewInfluxCluster(cfgsrc *ConfigSource, nodecfg *NodeConfig) (ic *InfluxCluster) {
 	ic = &InfluxCluster{
-		Zone:           nodecfg.Zone,
-		nexts:          nodecfg.Nexts,
 		query_executor: &InfluxQLExecutor{},
 		cfgsrc:         cfgsrc,
 		bas:            make([]BackendAPI, 0),
@@ -336,26 +333,7 @@ func (ic *InfluxCluster) Query(w http.ResponseWriter, req *http.Request) (err er
 	}
 
 	apis := ic.GetBackends()
-	// same zone first, other zone. pass non-active.
-	// TODO: better way?
-
 	for _, api := range apis {
-		if api.GetZone() != ic.Zone {
-			continue
-		}
-		if !api.IsActive() || api.IsWriteOnly() {
-			continue
-		}
-		err = api.Query(w, req)
-		if err == nil {
-			return
-		}
-	}
-
-	for _, api := range apis {
-		if api.GetZone() == ic.Zone {
-			continue
-		}
 		if !api.IsActive() {
 			continue
 		}

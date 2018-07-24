@@ -18,8 +18,6 @@ const (
 type NodeConfig struct {
 	ListenAddr   string
 	DB           string
-	Zone         string
-	Nexts        string
 	Interval     int
 	IdleTimeout  int
 	WriteTracing int
@@ -29,7 +27,6 @@ type NodeConfig struct {
 type BackendConfig struct {
 	URL             string
 	DB              string
-	Zone            string
 	Interval        int
 	Timeout         int
 	TimeoutQuery    int
