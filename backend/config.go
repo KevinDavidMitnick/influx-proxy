@@ -40,9 +40,8 @@ type BackendConfig struct {
 }
 
 type ConfigSource struct {
-	Backends     map[string]*BackendConfig `json:"backends"`
-	Node         *NodeConfig               `json:"node"`
-	Measurements map[string][]string       `json:measurements`
+	Backends map[string]*BackendConfig `json:"backends"`
+	Node     *NodeConfig               `json:"node"`
 }
 
 var (

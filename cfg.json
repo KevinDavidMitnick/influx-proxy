@@ -42,10 +42,6 @@
         "idletimeout":10,
         "writetracing":0,
         "querytracing":0
-    },
-    "measurements" : {
-        "cpu": ["test1","test2"],
-        "weather": ["test1","test2"]
     }
 }
 
