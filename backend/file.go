@@ -24,7 +24,7 @@ type FileBackend struct {
 func NewFileBackend(filename string) (fb *FileBackend, err error) {
 	fb = &FileBackend{
 		filename: filename,
-		dataflag: false,
+		dataflag: true,
 	}
 
 	fb.producer, err = os.OpenFile(filename+".dat",
