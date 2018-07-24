@@ -163,7 +163,7 @@ func (bs *Backends) Flush() {
 		var buf bytes.Buffer
 		err := Compress(&buf, p)
 		if err != nil {
-			log.Printf("write file error: %s\n", err)
+			log.Printf("write file error: %s, data is:%s\n", err, string(p))
 			return
 		}
 
@@ -176,20 +176,20 @@ func (bs *Backends) Flush() {
 			case nil:
 				return
 			case ErrBadRequest:
-				log.Printf("bad request, drop all data.")
+				log.Printf("bad request, drop all data,data is:%s", string(p))
 				return
 			case ErrNotFound:
-				log.Printf("bad backend, drop all data.")
+				log.Printf("bad backend, drop all data,data is:%s", string(p))
 				return
 			default:
-				log.Printf("unknown error %s, maybe overloaded.", err)
+				log.Printf("unknown error %s, maybe overloaded,data is:%s", err, string(p))
 			}
 			log.Printf("write http error: %s, data is: %s\n", err, string(p))
 		}
 
 		err = bs.fb.Write(p)
 		if err != nil {
-			log.Printf("write file error: %s\n", err)
+			log.Printf("write file error: %s, data is:%s\n", err, string(p))
 		}
 		// don't try to run rewrite loop directly.
 		// that need a lock.
