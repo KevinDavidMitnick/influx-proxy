@@ -1,7 +1,73 @@
 #!/bin/sh
-for i in `seq 1 1`;do
-    echo $i
-    timestamp=$(( 1530842400099987666 + $i ))
-    curl -i -XPOST 'http://10.21.1.215:9086/write?db=test' --data-binary "weather,altitude=888,area='liucong' temperature=88,humidity=${i} ${timestamp}"
-done
+data="HOST_disk_read_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=5.15 1532416782       
+HOST_disk_write_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=51.88 1532416782           
+HOST_disk_read_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=198.09 1532416782     
+HOST_disk_write_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=1828.01 1532416782   
+HOST_disk_read_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=5.15 1532416782             
+HOST_disk_write_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=51.88 1532416782           
+HOST_disk_read_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=198.09 1532416782     
+HOST_disk_write_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=1828.01 1532416782   
+HOST_disk_read_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=4.87 1532416782             
+HOST_disk_write_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=15.62 1532416782           
+HOST_disk_read_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=491.91 1532416782     
+HOST_disk_write_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=95.74 1532416782     
+HOST_disk_read_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=5.15 1532416782             
+HOST_disk_write_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=51.88 1532416782           
+HOST_disk_read_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=198.09 1532416782     
+HOST_disk_write_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=1828.01 1532416782   
+HOST_disk_read_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=4.87 1532416782             
+HOST_disk_write_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=15.62 1532416782           
+HOST_disk_read_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=491.91 1532416782     
+HOST_disk_write_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=95.74 1532416782     
+HOST_disk_read_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.43 1532416782             
+HOST_disk_write_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.52 1532416782            
+HOST_disk_read_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=4.49 1532416782       
+HOST_disk_write_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=5.49 1532416782      
+HOST_disk_read_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=5.15 1532416782             
+HOST_disk_write_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=51.88 1532416782           
+HOST_disk_read_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=198.09 1532416782      
+HOST_disk_write_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=1828.01 1532416782   
+HOST_disk_read_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=4.87 1532416782             
+HOST_disk_write_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=15.62 1532416782           
+HOST_disk_read_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=491.91 1532416782     
+HOST_disk_write_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=95.74 1532416782     
+HOST_disk_read_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.43 1532416782             
+HOST_disk_write_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.52 1532416782            
+HOST_disk_read_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=4.49 1532416782       
+HOST_disk_write_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=5.49 1532416782      
+HOST_disk_read_iops,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=0.34 1532416782             
+HOST_disk_write_iops,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=0.41 1532416782            
+HOST_disk_read_throughput,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=2.46 1532416782       
+HOST_disk_write_throughput,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=4.3 1532416782       
+HOST_disk_read_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=5.15 1532416782             
+HOST_disk_write_iops,disk_name=sda,host=172.16.125.14,hostname=compute01 value=51.88 1532416782           
+HOST_disk_read_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=198.09 1532416782     
+HOST_disk_write_throughput,disk_name=sda,host=172.16.125.14,hostname=compute01 value=1828.01 1532416782   
+HOST_disk_read_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=4.87 1532416782             
+HOST_disk_write_iops,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=15.62 1532416782           
+HOST_disk_read_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=491.91 1532416782     
+HOST_disk_write_throughput,disk_name=sdb,host=172.16.125.14,hostname=compute01 value=95.74 1532416782     
+HOST_disk_read_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.43 1532416782             
+HOST_disk_write_iops,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=0.52 1532416782            
+HOST_disk_read_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=4.49 1532416782       
+HOST_disk_write_throughput,disk_name=sdc,host=172.16.125.14,hostname=compute01 value=5.49 1532416782      
+HOST_disk_read_iops,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=0.34 1532416782             
+HOST_disk_write_iops,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=0.41 1532416782            
+HOST_disk_read_throughput,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=2.46 1532416782       
+HOST_disk_write_throughput,disk_name=sdd,host=172.16.125.14,hostname=compute01 value=4.3 1532416782       
+HOST_disk_read_iops,disk_name=sde,host=172.16.125.14,hostname=compute01 value=0.33 1532416782             
+HOST_disk_write_iops,disk_name=sde,host=172.16.125.14,hostname=compute01 value=0.21 1532416782            
+HOST_disk_read_throughput,disk_name=sde,host=172.16.125.14,hostname=compute01 value=2.59 1532416782       
+HOST_disk_write_throughput,disk_name=sde,host=172.16.125.14,hostname=compute01 value=9.33 1532416782      
+HOST_disk_usage_percent,disk_name=sda,disk_total=256060514304,host=172.16.125.14,hostname=compute01 value=0.09 1532416782 
+HOST_disk_used,disk_name=sda,disk_total=256060514304,host=172.16.125.14,hostname=compute01 value=230592512i 1532416782    
+HOST_disk_usage_percent,disk_name=sdb,disk_total=479559942144,host=172.16.125.14,hostname=compute01 value=0.016 1532416782 
+HOST_disk_used,disk_name=sdb,disk_total=479559942144,host=172.16.125.14,hostname=compute01 value=75526144i 1532416782      
+HOST_disk_usage_percent,disk_name=sdc,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=0.0 1532416782   
+HOST_disk_used,disk_name=sdc,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=5521408i 1532416782       
+HOST_disk_usage_percent,disk_name=sdd,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=0.0 1532416782   
+HOST_disk_used,disk_name=sdd,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=5521408i 1532416782       
+HOST_disk_usage_percent,disk_name=sde,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=0.0 1532416782   
+HOST_disk_used,disk_name=sde,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=5521408i 1532416782"    
 
+curl -i -XPOST 'http://10.21.1.226:8086/write?db=stackwatch' --data-binary "$data"

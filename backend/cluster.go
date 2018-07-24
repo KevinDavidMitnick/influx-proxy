@@ -486,39 +486,38 @@ func (ic *InfluxCluster) Write(p []byte) (err error) {
 		atomic.AddInt64(&ic.stats.WriteRequestDuration, time.Since(start).Nanoseconds())
 	}(time.Now())
 
-	// buf := bytes.NewBuffer(p)
+	buf := bytes.NewBuffer(p)
 
-	// var line []byte
-	// for {
-	// 	line, err = buf.ReadBytes('\n')
-	// 	switch err {
-	// 	default:
-	// 		log.Printf("error: %s\n", err)
-	// 		atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-	// 		return
-	// 	case io.EOF, nil:
-	// 		err = nil
-	// 	}
+	var line []byte
+	for {
+		line, err = buf.ReadBytes('\n')
+		switch err {
+		default:
+			log.Printf("error: %s\n", err)
+			atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
+			return
+		case io.EOF, nil:
+			err = nil
+		}
 
-	// 	if len(line) == 0 {
-	// 		break
-	// 	}
+		if len(line) == 0 {
+			break
+		}
 
-	// 	ic.WriteRow(line)
-	// }
-	ic.WriteRow(p)
+		ic.WriteRow(line)
+	}
 
-	// ic.lock.RLock()
-	// defer ic.lock.RUnlock()
-	// if len(ic.bas) > 0 {
-	// 	for _, n := range ic.bas {
-	// 		err = n.Write(p)
-	// 		if err != nil {
-	// 			log.Printf("error: %s\n", err)
-	// 			atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-	// 		}
-	// 	}
-	// }
+	ic.lock.RLock()
+	defer ic.lock.RUnlock()
+	if len(ic.bas) > 0 {
+		for _, n := range ic.bas {
+			err = n.Write(p)
+			if err != nil {
+				log.Printf("error: %s\n", err)
+				atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
+			}
+		}
+	}
 
 	return
 }
