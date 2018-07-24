@@ -163,11 +163,11 @@ func (bs *Backends) Flush() {
 		var buf bytes.Buffer
 		err := Compress(&buf, p)
 		if err != nil {
-			log.Printf("write file error: %s, data is:%s\n", err, string(p))
+			log.Printf("compress data error: %s, data is:%s\n", err, string(p))
 			return
 		}
 
-		p = buf.Bytes()
+		//p = buf.Bytes()
 
 		// maybe blocked here, run in another goroutine
 		if bs.HttpBackend.IsActive() {
