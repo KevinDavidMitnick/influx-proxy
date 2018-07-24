@@ -1,0 +1,15 @@
+[Unit]
+Description=InfluxDB-proxy is an open-source, distributed, time series database
+Documentation=https://docs.influxdata.com/influxdb/
+After=network-online.target
+
+[Service]
+LimitNOFILE=65536
+WorkingDirectory=/opt
+ExecStart=/opt/influxdb-proxy -c /opt/cfg.json
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=influxdb-proxy.service
