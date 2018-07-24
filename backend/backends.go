@@ -163,11 +163,11 @@ func (bs *Backends) Flush() {
 		var buf bytes.Buffer
 		err := Compress(&buf, p)
 		if err != nil {
-			log.Printf("compress data error: %s, data is:%s\n", err, string(p))
+			log.Printf("compress data error: %s\n", err)
 			return
 		}
 
-		//p = buf.Bytes()
+		p = buf.Bytes()
 
 		// maybe blocked here, run in another goroutine
 		if bs.HttpBackend.IsActive() {
@@ -176,20 +176,20 @@ func (bs *Backends) Flush() {
 			case nil:
 				return
 			case ErrBadRequest:
-				log.Printf("bad request, drop all data,data is:%s", string(p))
+				log.Printf("bad request, drop all data")
 				return
 			case ErrNotFound:
-				log.Printf("bad backend, drop all data,data is:%s", string(p))
+				log.Printf("bad backend, drop all data")
 				return
 			default:
-				log.Printf("unknown error %s, maybe overloaded,data is:%s", err, string(p))
+				log.Printf("unknown error %s, maybe overloaded", err)
 			}
-			log.Printf("write http error: %s, data is: %s\n", err, string(p))
+			log.Printf("write http error: %s\n", err)
 		}
 
 		err = bs.fb.Write(p)
 		if err != nil {
-			log.Printf("write file error: %s, data is:%s\n", err, string(p))
+			log.Printf("write file error: %s\n", err)
 		}
 		// don't try to run rewrite loop directly.
 		// that need a lock.

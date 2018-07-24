@@ -167,7 +167,7 @@ func (hb *HttpBackend) Write(p []byte) (err error) {
 
 func (hb *HttpBackend) WriteCompressed(p []byte) (err error) {
 	buf := bytes.NewBuffer(p)
-	err = hb.WriteStream(buf, false)
+	err = hb.WriteStream(buf, true)
 	return
 }
 
