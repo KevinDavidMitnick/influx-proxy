@@ -184,7 +184,7 @@ func (bs *Backends) Flush() {
 			default:
 				log.Printf("unknown error %s, maybe overloaded.", err)
 			}
-			log.Printf("write http error: %s\n", err)
+			log.Printf("write http error: %s, data is: %s\n", err, string(p))
 		}
 
 		err = bs.fb.Write(p)
