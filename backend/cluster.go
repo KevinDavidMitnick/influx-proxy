@@ -361,19 +361,12 @@ func (ic *InfluxCluster) WriteRow(line []byte) {
 		return
 	}
 
-	key, err := ScanKey(line)
-	if err != nil {
-		log.Printf("scan key error: %s\n", err)
-		atomic.AddInt64(&ic.stats.PointsWrittenFail, 1)
-		return
-	}
-
 	bs := ic.GetBackends()
 	// don't block here for a lont time, we just have one worker.
 	for _, b := range bs {
-		err = b.Write(line)
+		err := b.Write(line)
 		if err != nil {
-			log.Printf("cluster write fail: %s\n", key)
+			log.Printf("cluster write fail\n")
 			atomic.AddInt64(&ic.stats.PointsWrittenFail, 1)
 			return
 		}
@@ -387,39 +380,7 @@ func (ic *InfluxCluster) Write(p []byte) (err error) {
 		atomic.AddInt64(&ic.stats.WriteRequestDuration, time.Since(start).Nanoseconds())
 	}(time.Now())
 
-	buf := bytes.NewBuffer(p)
-
-	var line []byte
-	for {
-		line, err = buf.ReadBytes('\n')
-		switch err {
-		default:
-			log.Printf("error: %s\n", err)
-			atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-			return
-		case io.EOF, nil:
-			err = nil
-		}
-
-		if len(line) == 0 {
-			break
-		}
-
-		ic.WriteRow(line)
-	}
-
-	ic.lock.RLock()
-	defer ic.lock.RUnlock()
-	if len(ic.bas) > 0 {
-		for _, n := range ic.bas {
-			err = n.Write(p)
-			if err != nil {
-				log.Printf("error: %s\n", err)
-				atomic.AddInt64(&ic.stats.WriteRequestsFail, 1)
-			}
-		}
-	}
-
+	ic.WriteRow(p)
 	return
 }
 
