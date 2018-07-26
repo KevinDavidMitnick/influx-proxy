@@ -1,0 +1,12 @@
+hash: 44532a694a9ef7bd97011d2b805062d5ad27156e70a481bf72c9e4eb4f166094
+updated: 2018-07-26T14:31:56.010610314+08:00
+imports:
+- name: github.com/influxdata/influxdb
+  version: c5340f1bcdad0da8a1089c36fb32d18975b3e38e
+  subpackages:
+  - client/v2
+  - models
+  - pkg/escape
+- name: gopkg.in/natefinch/lumberjack.v2
+  version: a96e63847dc3c67d17befa69c303767e2f84e54f
+testImports: []
