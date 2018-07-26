@@ -24,7 +24,7 @@ type FileBackend struct {
 func NewFileBackend(filename string) (fb *FileBackend, err error) {
 	fb = &FileBackend{
 		filename: filename,
-		dataflag: true,
+		dataflag: false,
 	}
 
 	fb.producer, err = os.OpenFile(filename+".dat",
@@ -48,9 +48,18 @@ func NewFileBackend(filename string) (fb *FileBackend, err error) {
 		return
 	}
 
+	err = fb.LoadProducer()
+	if err != nil {
+		log.Print("Load producer error: ", err)
+	}
+
 	err = fb.RollbackMeta()
 	if err != nil {
 		err = nil
+	}
+
+	if fb.CheckIsData() {
+		fb.dataflag = true
 	}
 	return
 }
@@ -89,6 +98,24 @@ func (fb *FileBackend) IsData() (dataflag bool) {
 	fb.lock.Lock()
 	defer fb.lock.Unlock()
 	return fb.dataflag
+}
+
+func (fb *FileBackend) CheckIsData() bool {
+	producerOff, err := fb.producer.Seek(0, os.SEEK_CUR)
+	if err != nil {
+		log.Print("seek producer error: ", err)
+	}
+
+	consumerOff, err := fb.consumer.Seek(0, os.SEEK_CUR)
+	if err != nil {
+		log.Print("seek consumer error: ", err)
+	}
+
+	if producerOff == consumerOff {
+		return false
+	} else {
+		return true
+	}
 }
 
 // FIXME: signal here
@@ -151,7 +178,6 @@ func (fb *FileBackend) UpdateMeta() (err error) {
 
 	off_producer, err := fb.producer.Seek(0, os.SEEK_CUR)
 	if err != nil {
-		log.Print("OK")
 		log.Print("seek producer error: ", err)
 		return
 	}
@@ -192,6 +218,14 @@ func (fb *FileBackend) UpdateMeta() (err error) {
 	return
 }
 
+func (fb *FileBackend) LoadProducer() (err error) {
+	fb.lock.Lock()
+	defer fb.lock.Unlock()
+
+	_, err = fb.producer.Seek(0, os.SEEK_END)
+	return
+}
+
 func (fb *FileBackend) RollbackMeta() (err error) {
 	fb.lock.Lock()
 	defer fb.lock.Unlock()
@@ -204,7 +238,9 @@ func (fb *FileBackend) RollbackMeta() (err error) {
 
 	var off int64
 	err = binary.Read(fb.meta, binary.BigEndian, &off)
-	if err != nil {
+	if err == io.EOF {
+		off = 0
+	} else 	if err != nil && err != io.EOF {
 		log.Print("read meta error: ", err)
 		return
 	}
