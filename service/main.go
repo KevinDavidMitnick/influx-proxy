@@ -25,7 +25,7 @@ var (
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
 
-	flag.StringVar(&LogFilePath, "-o", "/var/log/influx-proxy.log", "output file")
+	flag.StringVar(&LogFilePath, "o", "/var/log/influx-proxy.log", "output file")
 	flag.StringVar(&ConfigFile, "c", "cfg.json", "config file")
 	flag.Parse()
 }
