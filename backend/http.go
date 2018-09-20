@@ -174,6 +174,7 @@ func (hb *HttpBackend) WriteCompressed(p []byte) (err error) {
 func (hb *HttpBackend) WriteStream(stream io.Reader, compressed bool) (err error) {
 	q := url.Values{}
 	q.Set("db", hb.DB)
+	q.Set("precision", "s")
 
 	req, err := http.NewRequest("POST", hb.URL+"/write?"+q.Encode(), stream)
 	if compressed {

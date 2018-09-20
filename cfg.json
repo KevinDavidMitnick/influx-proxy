@@ -1,7 +1,7 @@
 {
     "backends" :{
         "test1":{
-            "url": "http://10.21.1.220:9086",
+            "url": "http://10.21.1.226:9086",
             "db": "testDB",
             "interval": 1000,
             "timeout": 10000,
@@ -11,7 +11,7 @@
             "rewriteinterval":10000
         },
         "test2" :{
-            "url": "http://10.21.1.221:9086",
+            "url": "http://10.21.1.227:9086",
             "db": "testDB",
             "interval": 1000,
             "timeout": 10000,
@@ -21,7 +21,7 @@
             "rewriteinterval":10000
         },
         "test3" :{
-            "url": "http://10.21.1.222:9086",
+            "url": "http://10.21.1.228:9086",
             "db": "testDB",
             "interval": 1000,
             "timeout": 10000,

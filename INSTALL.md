@@ -5,7 +5,7 @@ Usage
 ------------
 
 ```
-git clone http://gitlab.chinac.com/OpsUltra/influx-proxy
+git clone http://github.com/influx-proxy
 go build 
 ./influx-proxy -c cfg.json
 ```

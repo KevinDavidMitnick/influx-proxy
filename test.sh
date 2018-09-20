@@ -70,4 +70,4 @@ HOST_disk_used,disk_name=sdd,disk_total=1999844147200,host=172.16.125.14,hostnam
 HOST_disk_usage_percent,disk_name=sde,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=0.0 1532416782   
 HOST_disk_used,disk_name=sde,disk_total=1999844147200,host=172.16.125.14,hostname=compute01 value=5521408i 1532416782"    
 
-curl -i -XPOST 'http://10.21.1.226:8086/write?db=stackwatch' --data-binary "$data"
+curl -i -XPOST 'http://10.21.1.225:9086/write?db=stackwatch' --data-binary "$data"
